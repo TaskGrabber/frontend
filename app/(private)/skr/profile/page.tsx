@@ -14,4 +14,5 @@ export default function ProfilePage() {
   if (isLoading) return <Spinner />
 
   return <OwnProfileHeader />
+
 }
