@@ -33,6 +33,7 @@ export const editProfile = async (
     .update({
       short_desc: values.shortDescription,
       long_desc: values.longDescription,
+      username: values.username,
     })
     .eq('id', profile!.id)
   if (error) return { error: error.message }
