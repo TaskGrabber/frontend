@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuthStore } from '@/store/AuthStore'
 
 export default function UserDescriptionPage() {
-  const { refreshUser } = useAuthStore()
+  const { refreshUser, user } = useAuthStore()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string>()
   const form = useForm<z.infer<typeof ProfileDescriptionSchema>>({
@@ -24,12 +24,21 @@ export default function UserDescriptionPage() {
     defaultValues: {
       shortDescription: '',
       longDescription: '',
+      username: '',
     },
   })
 
   // Refresh user from store. User is redirected to this page after confirming email
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => refreshUser(), [])
+
+  useEffect(() => {
+    if (!user) return
+
+    form.reset({
+      username: user.email?.split('@')[0],
+    })
+  }, [user, form])
 
   function onSubmit() {
     startTransition(() => {
@@ -48,6 +57,26 @@ export default function UserDescriptionPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
         >
+          {/* Username */}
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="space-y-2">
+                  <h2 className="text-xl font-semibold">Username</h2>
+                  <p className="text-sm text-muted-foreground">
+                    This will help others identify your account.
+                  </p>
+                </FormLabel>
+                <Input
+                  {...field}
+                />
+              </FormItem>
+            )}
+          />
+
+
           {/* Short description */}
           <FormField
             control={form.control}
