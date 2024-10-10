@@ -1,7 +1,7 @@
 "use server"
 
 import { PROFILE_STORE_FIELDS } from "@/lib/constants"
-import { createClient } from "@/utils/supabase/server"
+import { createAdminClient, createClient } from "@/utils/supabase/server"
 
 
 /**
@@ -23,4 +23,20 @@ export async function refreshUser() {
     .single()
 
   return { user, profile }
+}
+
+
+export async function getUserByUsername(username: string) {
+  const supabase = createClient()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select(PROFILE_STORE_FIELDS)
+    .eq('username', username)
+    .single()
+
+  const adminSupabase = createAdminClient()
+
+  const { data: { user } } = await adminSupabase.auth.admin.getUserById(profile.user_id)
+
+  return user
 }
