@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js'
-import { Mail, Phone } from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -13,14 +13,7 @@ import { useAuthStore } from '@/store/AuthStore'
 
 const VERIFICATIONS = [
   {
-    name: 'Phone',
-    icon: Phone,
-    check: (user: User | null) =>
-      !!user && !!user.phone && !!user.phone_confirmed_at,
-    get: (user: User | null) => user?.phone || 'Unverified',
-  },
-  {
-    name: 'Email',
+    name: "Email",
     icon: Mail,
     check: (user: User | null) =>
       !!user && !!user.email && !!user.email_confirmed_at,
@@ -48,11 +41,10 @@ export function VerificationList() {
             >
               <div className="flex items-center gap-x-3">
                 <verification.icon
-                  className={`w-6 h-6 ${
-                    verification.check(user)
+                  className={`w-6 h-6 ${verification.check(user)
                       ? 'text-green-500'
                       : 'text-gray-400'
-                  }`}
+                    }`}
                 />
                 <span className="text-base font-medium">
                   {verification.name}
@@ -64,11 +56,10 @@ export function VerificationList() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className={`${
-                        verification.check(user)
+                      className={`${verification.check(user)
                           ? 'border-green-500'
                           : 'border-gray-400'
-                      }`}
+                        }`}
                     >
                       {verification.check(user) ? 'Verified' : 'Unverified'}
                     </Button>
@@ -82,4 +73,8 @@ export function VerificationList() {
       </CardContent>
     </Card>
   )
+}
+
+export function SeekerVerificationList() {
+
 }
