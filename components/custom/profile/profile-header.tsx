@@ -1,7 +1,7 @@
 'use client'
 
 import { EditForm } from '@/components/custom/profile/edit-form'
-import { VerificationList } from '@/components/custom/profile/verification-list'
+import { SeekerVerificationList, VerificationList } from '@/components/custom/profile/verification-list'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -14,6 +14,7 @@ import { CollapsibleDesc } from "@/components/custom/collapsible-desc"
 import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client"
 import { PROFILE_STORE_FIELDS } from "@/lib/constants"
+import { useRouter } from 'next/navigation'
 
 export function OwnProfileHeader() {
   const { profile } = useAuthStore()
@@ -125,6 +126,7 @@ export function SeekerProfileHeader({ username }: Props) {
   const supabase = createClient()
   const [profile, setProfile] = useState<Record<string, any>>({})
   const avatarSrc = "https://placehold.co/150"
+  const router = useRouter()
 
   useEffect(() => {
     supabase
@@ -134,10 +136,11 @@ export function SeekerProfileHeader({ username }: Props) {
       .single()
       .then(({ data, error }) => {
         if (error) return console.error(error)
-        console.log(data)
+
+        if (!data.is_completed) router.push('/skr/profile')
         setProfile(data)
       })
-  }, [supabase, username])
+  }, [supabase, username, router])
 
   const joinedDate = new Date(profile?.created_at)
     .toLocaleDateString("PH", { month: "long", day: "numeric", year: "numeric" })
@@ -164,18 +167,9 @@ export function SeekerProfileHeader({ username }: Props) {
 
         <CollapsibleDesc content={profile?.long_desc} />
 
-        <div className="flex gap-x-4">
-          <Button size="icon" variant="ghost"><Share2 /></Button>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>Edit Profile</Button>
-            </DialogTrigger>
-            <DialogContent className="w-[720px] max-w-[unset]">
-              <EditForm />
-            </DialogContent>
-          </Dialog>
+        <div className="row-span-full ">
+          <SeekerVerificationList username={username} />
         </div>
-        <VerificationList />
       </section>
     </header>
   )
