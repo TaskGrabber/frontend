@@ -32,13 +32,11 @@ export function CollapsibleDesc({
       <CardDescription
         ref={descriptionRef}
         className={cn(
-          `whitespace-pre-line leading-relaxed text-gray-600 transition-all duration-300 ${
-            collapsed ? 'line-clamp-3' : ''
-          }`,
+          `whitespace-pre-line leading-relaxed text-gray-600 transition-all duration-300 ${collapsed ? 'line-clamp-3' : ''}`,
           className,
         )}
         dangerouslySetInnerHTML={{
-          __html: formatDescription(content as string),
+          __html: !!content && formatDescription(content as string),
         }}
       />
       {isOverflowing && (
