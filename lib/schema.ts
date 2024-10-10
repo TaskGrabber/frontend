@@ -75,6 +75,9 @@ export const SkillsSchema = z.object({
 })
 
 export const ProfileDescriptionSchema = z.object({
+  username: z.string().min(1, {
+    message: 'Username is required',
+  }),
   shortDescription: z.string().min(1, {
     message: 'Description is required',
   }),
